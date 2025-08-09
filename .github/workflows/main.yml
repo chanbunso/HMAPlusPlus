@@ -23,10 +23,13 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y build-essential gcc-aarch64-linux-gnu
 
+    - name: Patch Makefile to use correct toolchain
+      run: |
+        sed -i 's|/home/lshwjgpt/arm-gnu-toolchain-14.2.rel1-x86_64-aarch64-none-elf/bin/aarch64-none-elf-gcc|aarch64-linux-gnu-gcc|g' Makefile
+        sed -i 's|/home/lshwjgpt/arm-gnu-toolchain-14.2.rel1-x86_64-aarch64-none-elf/bin/aarch64-none-elf-g++|aarch64-linux-gnu-g++|g' Makefile
+        sed -i 's|/home/lshwjgpt/arm-gnu-toolchain-14.2.rel1-x86_64-aarch64-none-elf/bin/aarch64-none-elf-objcopy|aarch64-linux-gnu-objcopy|g' Makefile
+
     - name: Build with Make
-      env:
-        TARGET_COMPILE: aarch64-linux-gnu-
-        KP_DIR: ../..
       run: make
 
     - name: Upload build artifact
