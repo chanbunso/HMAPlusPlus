@@ -1,0 +1,37 @@
+name: Build HMAPlusPlus
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install ARM GNU Toolchain and dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential gcc-aarch64-linux-gnu
+
+    - name: Build with Make
+      env:
+        TARGET_COMPILE: aarch64-linux-gnu-
+        KP_DIR: ../..
+      run: make
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: hmaplusplus-binary
+        path: |
+          HMA++.kpm
